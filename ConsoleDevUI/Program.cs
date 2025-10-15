@@ -1,8 +1,9 @@
-﻿using System;
+﻿using DataStructuresToolkit;
+using DataStructuresToolKit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using DataStructuresToolkit;
 
 /// <summary>
 /// Console application that first runs ComplexityTester benchmarks,
@@ -112,7 +113,73 @@ class Program
         ArrayStringListHelpers.InsertIntoList(numList, index: 2, value: 999);
         Console.WriteLine($"After InsertIntoList O(n) at index 2 (value 999): {string.Join(", ", numList)}");
         Console.WriteLine(new string('-', 60));
+
+        // SECTION 3: STACK AND QUEUE
+
+        Console.WriteLine();
+        Console.WriteLine("STACK AND QUEUE DEMONSTRATION");
+        Console.WriteLine(new string('-', 60));
+
+        // STACK (LIFO)
+        var stack = new MyStack<string>();
+        Console.WriteLine("Adding items to Stack (LIFO):");
+        stack.Push("First"); Console.WriteLine("Pushed: First");
+        stack.Push("Second"); Console.WriteLine("Pushed: Second");
+        stack.Push("Third"); Console.WriteLine("Pushed: Third");
+
+        // Show full stack (top first) without permanently mutating it
+        Console.WriteLine("\nStack contents (top first):");
+        var tempStack = new List<string>();
+        while (true)
+        {
+            try
+            {
+                var v = stack.Pop();      // pop to read
+                Console.WriteLine(v);     // prints top to bottom
+                tempStack.Add(v);
+            }
+            catch (InvalidOperationException)
+            {
+                break; // empty
+            }
+        }
+        // restore
+        for (int i = tempStack.Count - 1; i >= 0; i--) stack.Push(tempStack[i]);
+
+        Console.WriteLine($"\nPeek (top): {stack.Peek()}");
+        Console.WriteLine($"Pop: {stack.Pop()}");
+        Console.WriteLine($"Pop: {stack.Pop()}");
+        Console.WriteLine($"Remaining top: {stack.Peek()}");
+        Console.WriteLine($"Count: {stack.Count}");
+        Console.WriteLine(new string('-', 60));
+
+        // QUEUE (FIFO)
+        var queue = new MyQueue<string>();
+        Console.WriteLine("Adding items to Queue (FIFO):");
+        queue.Enqueue("Job1"); Console.WriteLine("Enqueued: Job1");
+        queue.Enqueue("Job2"); Console.WriteLine("Enqueued: Job2");
+        queue.Enqueue("Job3"); Console.WriteLine("Enqueued: Job3");
+
+        // Show full queue (front first) without losing items
+        Console.WriteLine("\nQueue contents (front first):");
+        int qn = queue.Count;
+        var tempQ = new List<string>(qn);
+        for (int i = 0; i < qn; i++)
+        {
+            var v = queue.Dequeue();
+            Console.WriteLine(v);
+            tempQ.Add(v);
+        }
+        foreach (var v in tempQ) queue.Enqueue(v); // restore
+
+        Console.WriteLine($"\nPeek (front): {queue.Peek()}");
+        Console.WriteLine($"Dequeue: {queue.Dequeue()}");
+        Console.WriteLine($"Dequeue: {queue.Dequeue()}");
+        Console.WriteLine($"Next in line: {queue.Peek()}");
+        Console.WriteLine($"Count: {queue.Count}");
+        Console.WriteLine(new string('-', 60));
     }
+
 
     // Helpers (for this Program)
 
@@ -167,4 +234,5 @@ class Program
         }
         return result;
     }
+
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataStructuresToolKit
+namespace DataStructuresToolkit
 {
     /// <summary>LIFO stack resizable array (doubling).</summary>
     public class MyStack<T>

@@ -1,5 +1,4 @@
 ﻿using DataStructuresToolkit;
-using DataStructuresToolKit;
 using NUnit.Framework;
 using System;
 

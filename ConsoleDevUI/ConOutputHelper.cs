@@ -90,7 +90,8 @@ namespace ConsoleDevUI
             return result;
         }
 
-        // Recursion Demo
+        // Recursion Demo Helpers
+
 
         /// <summary>Run a batch of int→int calls and print the results.</summary>
         /// <param name="title">Title for the run.</param>
@@ -229,6 +230,51 @@ namespace ConsoleDevUI
                 Line($"TraverseDirectory(\"{path}\") -> ERROR: {ex.GetType().Name}: {ex.Message}");
             }
             Line(string.Empty);
+        }
+
+        // Sorting and Searching
+
+        /// <summary>
+        /// Print a compact timing table for three sizes.
+        /// </summary>
+        /// <param name="title">Section title.</param>
+        /// <param name="sizes">Exactly three sizes are expected for formatting convenience.</param>
+        /// <param name="rows">Rows of (label, t1, t2, t3).</param>
+        public static void PrintTimingTable(string title, int[] sizes, IEnumerable<(string label, long t1, long t2, long t3)> rows)
+        {
+            SubHeader(title);
+            TableHeader(new[] { "Method", $"n={sizes[0]:N0}", $"n={sizes[1]:N0}", $"n={sizes[2]:N0}" });
+            foreach (var r in rows)
+                StringRow(r.label, r.t1, r.t2, r.t3);
+            Divider();
+        }
+
+        /// <summary>
+        /// Find the first size where efficient method is time.
+        /// </summary>
+        /// <param name="sizes">Problem sizes in ascending order.</param>
+        /// <param name="simpleTimes">Times for the simple method.</param>
+        /// <param name="efficientTimes">Times for the efficient method.</param>
+        /// <returns>The size at which crossover occurs, or -1 if not observed.</returns>
+        public static int FindCrossover(IReadOnlyList<int> sizes, IReadOnlyList<long> simpleTimes, IReadOnlyList<long> efficientTimes)
+        {
+            if (sizes == null || simpleTimes == null || efficientTimes == null) return -1;
+            int n = Math.Min(sizes.Count, Math.Min(simpleTimes.Count, efficientTimes.Count));
+            for (int i = 0; i < n; i++)
+            {
+                if (efficientTimes[i] <= simpleTimes[i]) return sizes[i];
+            }
+            return -1;
+        }
+
+        //Print the crossover size.
+        public static void PrintCrossover(string what, int crossover)
+        {
+            if (crossover < 0)
+                Line($"{what} crossover: not observed in the tested sizes.");
+            else
+                Line($"{what} crossover: ~n = {crossover} (efficient method starts to win).");
+            Divider();
         }
     }
 }

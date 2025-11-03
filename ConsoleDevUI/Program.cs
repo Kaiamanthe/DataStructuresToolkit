@@ -1,7 +1,8 @@
-﻿using System;
+﻿using DataStructuresToolkit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DataStructuresToolkit;
+using Toolkit;
 
 namespace ConsoleDevUI
 {
@@ -11,7 +12,6 @@ namespace ConsoleDevUI
         {
             var tester = new ComplexityTester();
 
-            // Create and fill arrays for testing
             int[] arr1 = new int[1000];
             int[] arr2 = new int[10000];
             int[] arr3 = new int[100000];
@@ -130,6 +130,85 @@ namespace ConsoleDevUI
 
             // Structural recursion
             ConOutputHelper.RunDirTraverseDemo(Environment.CurrentDirectory, depth: 1);
+
+            ConOutputHelper.Header("Search & Sort Timing Benchmarks");
+            var sizes = new[] { 100, 1_000, 10_000 };
+
+            var bubbleTimes = new List<long>(sizes.Length);
+            var mergeTimes = new List<long>(sizes.Length);
+            var linearTimes = new List<long>(sizes.Length);
+            var binaryTimes = new List<long>(sizes.Length);
+
+            // Sort timings (Bubble vs Merge)
+            foreach (var n in sizes)
+            {
+                var baseArr = SortingSearchingHelpers.RandomArray(n);
+                var a1 = (int[])baseArr.Clone();
+                var a2 = (int[])baseArr.Clone();
+
+                long tBubble = SortingSearchingHelpers.TimeMs(() => SortingSearchingHelpers.BubbleSort(a1));
+                long tMerge = SortingSearchingHelpers.TimeMs(() => SortingSearchingHelpers.MergeSort(a2));
+
+                bubbleTimes.Add(tBubble);
+                mergeTimes.Add(tMerge);
+            }
+
+            ConOutputHelper.PrintTimingTable(
+                "Sorting Timings (Bubble vs Merge)",
+                sizes,
+                new[]
+                {
+                    ("Bubble (O(n²))",        bubbleTimes[0], bubbleTimes[1], bubbleTimes[2]),
+                    ("Merge  (O(n log n))",   mergeTimes[0],  mergeTimes[1],  mergeTimes[2])
+                }
+            );
+
+            // Search timings (Linear vs Binary)
+            const int trials = 500;
+            foreach (var n in sizes)
+            {
+                var baseArr = SortingSearchingHelpers.RandomArray(n);
+                var sorted = SortingSearchingHelpers.SortedCopy(baseArr);
+
+                int presentTarget = sorted[n / 2];
+                int missingTarget = int.MaxValue;
+
+                long tLinear = SortingSearchingHelpers.TimeMs(() =>
+                {
+                    for (int t = 0; t < trials; t++)
+                    {
+                        if ((t & 1) == 0)
+                            SortingSearchingHelpers.LinearSearch(sorted, presentTarget);
+                        else
+                            SortingSearchingHelpers.LinearSearch(sorted, missingTarget);
+                    }
+                });
+
+                long tBinary = SortingSearchingHelpers.TimeMs(() =>
+                {
+                    for (int t = 0; t < trials; t++)
+                    {
+                        if ((t & 1) == 0)
+                            SortingSearchingHelpers.BinarySearch(sorted, presentTarget);
+                        else
+                            SortingSearchingHelpers.BinarySearch(sorted, missingTarget);
+                    }
+                });
+
+                linearTimes.Add(tLinear);
+                binaryTimes.Add(tBinary);
+            }
+
+            ConOutputHelper.PrintTimingTable(
+                "Search Timings (Linear vs Binary) — aggregated over multiple trials",
+                sizes,
+                new[]
+                {
+                    ("Linear (O(n))",       linearTimes[0], linearTimes[1], linearTimes[2]),
+                    ("Binary (O(log n))",   binaryTimes[0], binaryTimes[1], binaryTimes[2])
+                }
+            );
+
         }
 
         static void Fill(int[] a)

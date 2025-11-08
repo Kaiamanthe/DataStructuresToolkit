@@ -209,6 +209,58 @@ namespace ConsoleDevUI
                 }
             );
 
+
+            // Trees & BST Toolkit
+            ConOutputHelper.Header("Trees & BST Toolkit Tests");
+
+            // Teaching tree
+            ConOutputHelper.SubHeader("Teaching Tree Traversals + Metrics");
+            var root = DataStructuresToolkit.TreeNode.BuildTeachingTree();
+
+            string Join(System.Collections.Generic.IEnumerable<int> xs) => string.Join(", ", xs);
+
+            ConOutputHelper.Line($"Inorder   : {Join(DataStructuresToolkit.TreeNode.Inorder(root))}");
+            ConOutputHelper.Line($"Preorder  : {Join(DataStructuresToolkit.TreeNode.Preorder(root))}");
+            ConOutputHelper.Line($"Postorder : {Join(DataStructuresToolkit.TreeNode.Postorder(root))}");
+
+            int hTeach = DataStructuresToolkit.TreeNode.Height(root);
+            ConOutputHelper.Line($"Height (edges) teaching tree: {hTeach}");
+            ConOutputHelper.Line($"Depth of 38: {DataStructuresToolkit.TreeNode.Depth(root, 38)}");
+            ConOutputHelper.Line($"Depth of 27: {DataStructuresToolkit.TreeNode.Depth(root, 27)}");
+            ConOutputHelper.Line($"Depth of 9 : {DataStructuresToolkit.TreeNode.Depth(root, 9)}");
+            ConOutputHelper.Divider();
+
+            // BST insertion & search – classic sequence
+            ConOutputHelper.SubHeader("BST Insert + Contains (classic sequence)");
+            var bst = new DataStructuresToolkit.Bst();
+            int[] seq = { 50, 30, 70, 20, 40, 60, 80 };
+            foreach (var v in seq) bst.Insert(v);
+
+            ConOutputHelper.Line($"BST inorder (sorted): {Join(bst.Inorder())}");
+            ConOutputHelper.Line($"Contains 60? {bst.Contains(60)}");
+            ConOutputHelper.Line($"Contains 25? {bst.Contains(25)}");
+            ConOutputHelper.Line($"BST height (edges): {bst.Height()}");
+            ConOutputHelper.Divider();
+
+            // Skewed vs. balanced height comparison
+            ConOutputHelper.SubHeader("Skewed vs. Balanced-ish Height Comparison");
+
+            // Sorted insert
+            var skewed = new DataStructuresToolkit.Bst();
+            int[] sortedSeq = { 10, 20, 30, 40, 50 };
+            foreach (var v in sortedSeq) skewed.Insert(v);
+
+            // Balanced insertion order of the same values
+            var balanced = new DataStructuresToolkit.Bst();
+            int[] balancedOrder = { 30, 20, 40, 10, 50 };
+            foreach (var v in balancedOrder) balanced.Insert(v);
+
+            ConOutputHelper.Line($"Skewed inorder   : {Join(skewed.Inorder())}");
+            ConOutputHelper.Line($"Balanced inorder : {Join(balanced.Inorder())}");
+            ConOutputHelper.Line($"Skewed height (edges)   : {skewed.Height()}");
+            ConOutputHelper.Line($"Balanced height (edges) : {balanced.Height()}");
+            ConOutputHelper.Divider();
+
         }
 
         static void Fill(int[] a)

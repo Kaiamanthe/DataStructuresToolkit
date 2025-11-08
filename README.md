@@ -28,14 +28,14 @@ DataStructuresToolkit/
     - ArrayStringListHelpers.cs
     - ComplexityTester.cs
     - RecursionHelper.cs
+    - TreeToolkit.cs
 
 - Tests/
     - MyStackTests.cs
     - MyQueueTests.cs
     - ComplexityTests.cs
     - RecursionHelperTests.cs
-
-
+    - TreeToolkitTests.cs
 
 ---
 
@@ -138,6 +138,30 @@ PowerSet<T>(T[] items) — all subsets via include/exclude branching with backtr
 TraverseDirectory(string path, int depthLimit, Action<string> onVisit) — walks a directory tree; visits once per path; depth-capped to keep output reasonable
 
 They demonstrate three distinct recursion categories
+
+---
+
+### TreeToolkit
+TreeToolkit.cs provides a general binary tree API and a minimal Binary Search Tree (BST), with full XML documentation and complexity notes.
+
+TreeNode
+    - static BuildTeachingTree() fixed 5-node tree for deterministic traversal outputs
+    - Inorder(TreeNode) L, Root, R
+    - Preorder(TreeNode) Root, L, R
+    - Postorder(TreeNode) L, R, Root
+    - Height(TreeNode) edges convention (empty = −1, leaf = 0)
+    - Depth(TreeNode, int target) edges from root; −1 if not found
+
+Complexity: traversals O(n) time, O(h) space; height/depth O(n) time, O(h) space.
+
+Bst
+    - bool Insert(int value) → no duplicates (returns false if duplicate)
+    - bool Contains(int value)
+    - int Height() → uses a private static helper on nodes (edges convention)
+    - IEnumerable<int> Inorder() → in-order enumeration (sorted)
+
+Complexity: expected O(log n) search/insert when balanced; O(n) worst-case when skewed; height O(n).
+
 ---
 
 ### Unit Testing (NUnit)
@@ -170,6 +194,24 @@ RecursionHelperTests
 * PowerSet: empty input → one empty subset; 2 items → 4 subsets; 3 items → 8 subsets; null throws
 * TraverseDirectory: depth 0 → only root; depth 1 → root + immediate children (no duplicates, no deeper files); null args throw
 * Safety: class-level timeout [Timeout(10000)] to fail fast if anything ever recurses infinitely
+
+TreeToolkitTests
+* Traversals
+    * Inorder/Preorder/Postorder on the teaching tree → exact expected sequences
+    * Empty/leaf/right-skewed cases for coverage
+
+* Height
+    * Teaching tree uses edges convention (height = 2)
+    * Empty tree returns −1
+
+* Depth
+    * Finds existing values (root and grandchild)
+    * Returns −1 for missing
+
+* BST
+    * Insert accepts uniques and rejects duplicates; inorder is sorted
+    * Contains finds present and rejects missing (including empty BST)
+    * Height shows skewed > balanced for same values (sorted vs. balanced-ish orders)
 
 
 ---

@@ -92,7 +92,6 @@ namespace ConsoleDevUI
 
         // Recursion Demo Helpers
 
-
         /// <summary>Run a batch of int→int calls and print the results.</summary>
         /// <param name="title">Title for the run.</param>
         /// <param name="inputs">Input values.</param>
@@ -275,6 +274,51 @@ namespace ConsoleDevUI
             else
                 Line($"{what} crossover: ~n = {crossover} (efficient method starts to win).");
             Divider();
+        }
+
+        // AVL tree printing helpers
+
+        /// <summary>
+        /// Prints a binary tree of <see cref="Node"/>s, showing each key
+        /// and its AVL balance factor (height(left) - height(right)).
+        /// </summary>
+        /// <param name="root">Root node of tree (nullable).</param>
+        /// <remarks>
+        /// Used by the AVL demo to visualize the structure after rotations.
+        /// </remarks>
+        public static void PrintTree(Node root)
+        {
+            PrintTree(root, string.Empty, true);
+        }
+
+        private static void PrintTree(Node node, string indent, bool isTail)
+        {
+            if (node == null)
+            {
+                Line(indent + (isTail ? "└──" : "├──") + " (null)");
+                return;
+            }
+
+            int bf = TreeHelper.BalFactor(node);
+            Line(indent + (isTail ? "└──" : "├──") + $"{node.Value} (bf={bf})");
+
+            string childIndent = indent + (isTail ? "    " : "│   ");
+
+            if (node.Left == null && node.Right == null) return;
+
+            if (node.Left != null && node.Right != null)
+            {
+                PrintTree(node.Left, childIndent, false);
+                PrintTree(node.Right, childIndent, true);
+            }
+            else if (node.Left != null)
+            {
+                PrintTree(node.Left, childIndent, true);
+            }
+            else
+            {
+                PrintTree(node.Right, childIndent, true);
+            }
         }
     }
 }

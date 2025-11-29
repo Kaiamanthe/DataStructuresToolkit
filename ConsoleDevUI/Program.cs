@@ -215,24 +215,24 @@ namespace ConsoleDevUI
 
             // Teaching tree
             ConOutputHelper.SubHeader("Teaching Tree Traversals + Metrics");
-            var root = DataStructuresToolkit.TreeNode.BuildTeachingTree();
+            var root = DataStructuresToolkit.TreeToolkit.BuildTeachingTree();
 
             string Join(System.Collections.Generic.IEnumerable<int> xs) => string.Join(", ", xs);
 
-            ConOutputHelper.Line($"Inorder   : {Join(DataStructuresToolkit.TreeNode.Inorder(root))}");
-            ConOutputHelper.Line($"Preorder  : {Join(DataStructuresToolkit.TreeNode.Preorder(root))}");
-            ConOutputHelper.Line($"Postorder : {Join(DataStructuresToolkit.TreeNode.Postorder(root))}");
+            ConOutputHelper.Line($"Inorder   : {Join(DataStructuresToolkit.TreeHelper.Inorder(root))}");
+            ConOutputHelper.Line($"Preorder  : {Join(DataStructuresToolkit.TreeHelper.Preorder(root))}");
+            ConOutputHelper.Line($"Postorder : {Join(DataStructuresToolkit.TreeHelper.Postorder(root))}");
 
-            int hTeach = DataStructuresToolkit.TreeNode.Height(root);
+            int hTeach = DataStructuresToolkit.TreeHelper.Height(root);
             ConOutputHelper.Line($"Height (edges) teaching tree: {hTeach}");
-            ConOutputHelper.Line($"Depth of 38: {DataStructuresToolkit.TreeNode.Depth(root, 38)}");
-            ConOutputHelper.Line($"Depth of 27: {DataStructuresToolkit.TreeNode.Depth(root, 27)}");
-            ConOutputHelper.Line($"Depth of 9 : {DataStructuresToolkit.TreeNode.Depth(root, 9)}");
+            ConOutputHelper.Line($"Depth of 38: {DataStructuresToolkit.TreeHelper.Depth(root, 38)}");
+            ConOutputHelper.Line($"Depth of 27: {DataStructuresToolkit.TreeHelper.Depth(root, 27)}");
+            ConOutputHelper.Line($"Depth of 9 : {DataStructuresToolkit.TreeHelper.Depth(root, 9)}");
             ConOutputHelper.Divider();
 
             // BST insertion & search – classic sequence
             ConOutputHelper.SubHeader("BST Insert + Contains (classic sequence)");
-            var bst = new DataStructuresToolkit.Bst();
+            var bst = new DataStructuresToolkit.TreeToolkit();
             int[] seq = { 50, 30, 70, 20, 40, 60, 80 };
             foreach (var v in seq) bst.Insert(v);
 
@@ -246,12 +246,12 @@ namespace ConsoleDevUI
             ConOutputHelper.SubHeader("Skewed vs. Balanced-ish Height Comparison");
 
             // Sorted insert
-            var skewed = new DataStructuresToolkit.Bst();
+            var skewed = new DataStructuresToolkit.TreeToolkit();
             int[] sortedSeq = { 10, 20, 30, 40, 50 };
             foreach (var v in sortedSeq) skewed.Insert(v);
 
             // Balanced insertion order of the same values
-            var balanced = new DataStructuresToolkit.Bst();
+            var balanced = new DataStructuresToolkit.TreeToolkit();
             int[] balancedOrder = { 30, 20, 40, 10, 50 };
             foreach (var v in balancedOrder) balanced.Insert(v);
 
@@ -261,6 +261,54 @@ namespace ConsoleDevUI
             ConOutputHelper.Line($"Balanced height (edges) : {balanced.Height()}");
             ConOutputHelper.Divider();
 
+            // AVL Tree Demo
+            ConOutputHelper.Header("AVL Tree Toolkit Tests");
+
+            // Demonstrate imbalance with plain BST then deemo AVL rebalancing.
+            ConOutputHelper.SubHeader("AVL Insert + Rotations with {10, 20, 30}");
+
+            // using TreeToolkit Plain BST (no rotations)
+            var plainBst = new DataStructuresToolkit.TreeToolkit();
+            foreach (var v in new[] { 10, 20, 30 })
+                plainBst.Insert(v);
+
+            ConOutputHelper.Line("Plain BST (no rotations) with {10, 20, 30}:");
+            ConOutputHelper.Line($"Height (edges): {plainBst.Height()}  (skewed to the right)");
+            ConOutputHelper.Divider();
+
+            // AVL tree on same sequence.
+            var avl = new DataStructuresToolkit.AvlTree();
+            foreach (var v in new[] { 10, 20, 30 })
+                avl.Insert(v);
+
+            ConOutputHelper.Line("AVL Tree after inserting {10, 20, 30}:");
+            ConOutputHelper.Line("Structure (key and balance factor per node):");
+            ConOutputHelper.PrintTree(avl.Root);
+            ConOutputHelper.Line($"AVL height (edges): {avl.Height}");
+            ConOutputHelper.Line($"Contains 20? {avl.Contains(20)}");
+            ConOutputHelper.Line($"Contains 99? {avl.Contains(99)}");
+            ConOutputHelper.Divider();
+
+            // PriorityQueue
+            ConOutputHelper.Header("Priority Queue Toolkit Tests");
+
+            ConOutputHelper.SubHeader("Min-Heap Priority Queue with {5, 2, 8}");
+
+            var pq = new DataStructuresToolkit.PriorityQueue();
+            ConOutputHelper.Line("Enqueue 5"); pq.Enqueue(5);
+            ConOutputHelper.Line("Enqueue 2"); pq.Enqueue(2);
+            ConOutputHelper.Line("Enqueue 8"); pq.Enqueue(8);
+
+            ConOutputHelper.Line("\nDequeue operations (should return smallest first):");
+            int first = pq.Dequeue();
+            ConOutputHelper.Line($"First Dequeue()  => {first}  (expected 2)");
+
+            if (pq.Count > 0)
+                ConOutputHelper.Line($"Second Dequeue() => {pq.Dequeue()}");
+            if (pq.Count > 0)
+                ConOutputHelper.Line($"Third Dequeue()  => {pq.Dequeue()}");
+
+            ConOutputHelper.Divider();
         }
 
         static void Fill(int[] a)

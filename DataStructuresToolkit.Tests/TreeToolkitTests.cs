@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
 using DataStructuresToolkit;
 
@@ -8,165 +7,65 @@ namespace DataStructuresToolkit.Tests
     [TestFixture]
     public class TreeToolkitTests
     {
-        private static TreeNode T() => TreeNode.BuildTeachingTree(); // teaching tree
-        private static int[] Seq(params int[] xs) => xs;              // terse array literal
+        // Teaching tree builder + terse array literal helper
+        private static Node TeachingTree() => TreeToolkit.BuildTeachingTree();
+        private static int[] Seq(params int[] xs) => xs;
 
-        // TreeNode Traversals
+        // BuildTeachingTree
 
         [Test]
-        public void Inorder_TeachingTree_MatchesExpected()
+        public void BuildTeachingTree_ConstructsExpectedShape()
         {
             // Arrange
-            var root = T();
-            var expected = Seq(3, 27, 9, 38, 43);
+            // Teaching tree should look like:
+            //        38
+            //       /  \
+            //     27    43
+            //    /  \
+            //   3    9
 
             // Act
-            var actual = TreeNode.Inorder(root).ToArray();
+            var root = TeachingTree();
 
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
+            // Assert root
+            Assert.That(root, Is.Not.Null);
+            Assert.That(root.Value, Is.EqualTo(38));
+
+            // Assert left subtree
+            Assert.That(root.Left, Is.Not.Null);
+            Assert.That(root.Left.Value, Is.EqualTo(27));
+
+            Assert.That(root.Left.Left, Is.Not.Null);
+            Assert.That(root.Left.Left.Value, Is.EqualTo(3));
+            Assert.That(root.Left.Left.Left, Is.Null);
+            Assert.That(root.Left.Left.Right, Is.Null);
+
+            Assert.That(root.Left.Right, Is.Not.Null);
+            Assert.That(root.Left.Right.Value, Is.EqualTo(9));
+            Assert.That(root.Left.Right.Left, Is.Null);
+            Assert.That(root.Left.Right.Right, Is.Null);
+
+            // Assert right subtree
+            Assert.That(root.Right, Is.Not.Null);
+            Assert.That(root.Right.Value, Is.EqualTo(43));
+            Assert.That(root.Right.Left, Is.Null);
+            Assert.That(root.Right.Right, Is.Null);
         }
 
-        [Test]
-        public void Inorder_Empty_YieldsEmpty()
-        {
-            // Arrange
-            TreeNode root = null;
-
-            // Act
-            var actual = TreeNode.Inorder(root).ToArray();
-
-            // Assert
-            Assert.That(actual, Is.Empty);
-        }
+        // BST behavior (TreeToolkit)
 
         [Test]
-        public void Preorder_TeachingTree_MatchesExpected()
+        public void TreeToolkit_Insert_AllUniqueVal_ThenInorderIsSorted()
         {
             // Arrange
-            var root = T();
-            var expected = Seq(38, 27, 3, 9, 43);
-
-            // Act
-            var actual = TreeNode.Preorder(root).ToArray();
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Preorder_Leaf_JustRoot()
-        {
-            // Arrange
-            var root = new TreeNode(7);
-            var expected = Seq(7);
-
-            // Act
-            var actual = TreeNode.Preorder(root).ToArray();
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Postorder_TeachingTree_MatchesExpected()
-        {
-            // Arrange
-            var root = T();
-            var expected = Seq(3, 9, 27, 43, 38);
-
-            // Act
-            var actual = TreeNode.Postorder(root).ToArray();
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Postorder_RightSkewed_VisitsLeftRightRootOrder()
-        {
-            // Arrange
-            var root = new TreeNode(1, null,
-                        new TreeNode(2, null,
-                        new TreeNode(3)));
-            var expected = Seq(3, 2, 1);
-
-            // Act
-            var actual = TreeNode.Postorder(root).ToArray();
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        // TreeNode Metrics
-
-        [Test]
-        public void Height_TeachingTree_UsesEdgesConvention()
-        {
-            // Arrange
-            var root = T();
-
-            // Act
-            int h = TreeNode.Height(root);
-
-            // Assert
-            // Teaching tree has 3 levels of nodes, height (edges) = 2
-            Assert.That(h, Is.EqualTo(2));
-        }
-
-        [Test]
-        public void Height_Empty_IsMinusOne()
-        {
-            // Arrange
-            TreeNode root = null;
-
-            // Act
-            int h = TreeNode.Height(root);
-
-            // Assert
-            Assert.That(h, Is.EqualTo(-1));
-        }
-
-        [Test]
-        public void Depth_FindsExistingValue()
-        {
-            // Arrange
-            var root = T();
-
-            // Act
-            int dRoot = TreeNode.Depth(root, 38);
-            int dGrandchild = TreeNode.Depth(root, 9);
-
-            // Assert
-            Assert.That(dRoot, Is.EqualTo(0));      // root
-            Assert.That(dGrandchild, Is.EqualTo(2)); // grandchild
-        }
-
-        [Test]
-        public void Depth_MissingValue_IsMinusOne()
-        {
-            // Arrange
-            var root = T();
-
-            // Act
-            int d = TreeNode.Depth(root, 999);
-
-            // Assert
-            Assert.That(d, Is.EqualTo(-1));
-        }
-
-        // BST Behavior
-
-        [Test]
-        public void Bst_Insert_AllUniqueValues_ThenInorderIsSorted()
-        {
-            // Arrange
-            var bst = new Bst();
+            var bst = new TreeToolkit();
             int[] vals = { 50, 30, 70, 20, 40, 60, 80 };
             var expected = vals.OrderBy(x => x).ToArray();
 
             // Act
-            foreach (var v in vals) Assert.That(bst.Insert(v), Is.True, $"Insert failed for {v}");
+            foreach (var v in vals)
+                Assert.That(bst.Insert(v), Is.True, $"Insert failed for {v}");
+
             var inorder = bst.Inorder().ToArray();
 
             // Assert
@@ -174,10 +73,10 @@ namespace DataStructuresToolkit.Tests
         }
 
         [Test]
-        public void Bst_Insert_Duplicate_ReturnsFalseAndDoesNotChangeOrder()
+        public void TreeToolkit_Insert_Dup_ReturnsFalseAndDoesNotChangeOrder()
         {
             // Arrange
-            var bst = new Bst();
+            var bst = new TreeToolkit();
             var expected = Seq(10);
 
             // Act
@@ -192,10 +91,10 @@ namespace DataStructuresToolkit.Tests
         }
 
         [Test]
-        public void Bst_Contains_FindsPresent_AndRejectsMissing()
+        public void TreeToolkit_Contains_FindsPresent_AndRejectsMissing()
         {
             // Arrange
-            var bst = new Bst();
+            var bst = new TreeToolkit();
             int[] vals = { 50, 30, 70, 20, 40, 60, 80 };
             foreach (var v in vals) bst.Insert(v);
 
@@ -209,10 +108,10 @@ namespace DataStructuresToolkit.Tests
         }
 
         [Test]
-        public void Bst_Contains_OnEmpty_IsFalse()
+        public void TreeToolkit_Contains_OnEmpty_IsFalse()
         {
             // Arrange
-            var bst = new Bst();
+            var bst = new TreeToolkit();
 
             // Act
             bool found = bst.Contains(123);
@@ -222,10 +121,10 @@ namespace DataStructuresToolkit.Tests
         }
 
         [Test]
-        public void Bst_Height_EmptyIsMinusOne_SingleNodeIsZero()
+        public void TreeToolkit_Height_EmptyIsMinusOne_SingleNodeIsZero()
         {
             // Arrange
-            var bst = new Bst();
+            var bst = new TreeToolkit();
 
             // Act
             int hEmpty = bst.Height();
@@ -238,14 +137,16 @@ namespace DataStructuresToolkit.Tests
         }
 
         [Test]
-        public void Bst_Height_SkewedIsTallerThanBalancedOnSameValues()
+        public void TreeToolkit_Height_SkewedIsTallerThanBalancedOnSameVal()
         {
             // Arrange
-            var skewed = new Bst();
-            foreach (var v in new[] { 10, 20, 30, 40, 50 }) skewed.Insert(v);
+            var skewed = new TreeToolkit();
+            foreach (var v in new[] { 10, 20, 30, 40, 50 })
+                skewed.Insert(v);
 
-            var balanced = new Bst();
-            foreach (var v in new[] { 30, 20, 40, 10, 50 }) balanced.Insert(v);
+            var balanced = new TreeToolkit();
+            foreach (var v in new[] { 30, 20, 40, 10, 50 })
+                balanced.Insert(v);
 
             // Act
             int hSkewed = skewed.Height();

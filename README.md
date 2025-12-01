@@ -33,6 +33,8 @@ DataStructuresToolkit/
     - ArrayStringListHelpers.cs
     - ComplexityTester.cs
     - RecursionHelper.cs
+    - SimpleHashTable.cs
+    - AssociativeHelpers.cs
 
 - Tests/
     - TreeToolkitTests.cs
@@ -43,6 +45,9 @@ DataStructuresToolkit/
     - MyQueueTests.cs
     - ComplexityTests.cs
     - RecursionHelperTests.cs
+    - SimpleHashTableTests.cs
+    - AssociativeHelpersTests.cs
+
 
 ---
 
@@ -251,6 +256,69 @@ Complexity:
 
 ---
 
+### SimpleHashTable (Custom Chaining Hash Table)
+
+SimpleHashTable is a lightweight custom hash table implementation using:
+
+ * Integer keys
+ * Modulo hashing
+ * Chaining via List<int>[] buckets
+ * No overwriting of existing keys
+ * Graceful handling of negative keys
+
+Public API
+
+SimpleHashTable(int size)
+  * Creates table with given bucket count; throws if size < 1
+  * O(b) initialization
+
+void Insert(int key)
+  * Inserts key into hashed bucket; prevents duplicates	
+  * Avg O(1), Worst O(n)
+
+bool Contains(int key)
+  * Returns true if key exists
+  * Avg O(1), Worst O(n)
+
+void PrintTable()
+  * Prints each bucket and collision chain
+  * O(n + b)
+
+Behavior Summary
+  * Collisions are handled with chaining, showing buckets like:
+  **Example:**
+  ```csharp
+  [2] 12 -> 22 -> 37
+  ```
+  * Duplicate keys are ignored.
+  * Negative keys are normalized (ensuring valid bucket index).
+  * PrintTable is intended for demo and visualization, not production code.
+
+---
+
+### AssociativeHelpers (Dictionary & HashSet Demonstrations)
+
+This helper class demonstrates C# built-in associative containers, serving as a contrast to the custom hash table.
+
+Dictionary Demo
+
+Shows:
+  * Case-insensitive string dictionary
+  * ContainsKey checks
+  * TryGetValue lookups
+  * Behavior when keys are missing
+
+HashSet Demo
+
+Shows:
+  * Duplicate prevention
+  * Contains behavior
+  * Final printed set membership
+
+Both demos print to the console and are used by Program.cs during interactive runtime.
+
+---
+
 ### Unit Testing (NUnit)
 
 All tests follow the Arrange → Act → Assert (AAA) pattern.
@@ -327,6 +395,44 @@ PriorityQueueTests
   * Mixed positive/negative values: Peek() / Dequeue() follow correct min-order (e.g., −10, −3, 0, 2, 5).
   * Peek() does not remove the element and does not change Count.
   * Dequeue() and Peek() on an empty queue throw InvalidOperationException.
+
+SimpleHashTableTests (NUnit)
+
+All tests follow the Arrange → Act → Assert pattern and use ClassicAssert (for NUnit 4 compatibility).
+
+Covered Scenarios
+  * Constructor throws on invalid size
+    * Input validation
+  * Insert then Contains returns true
+    * Positive-path correctness
+  * Contains returns false on missing key
+    * Negative key lookup
+  * Duplicate insertion does not break behavior
+    * Collision-chain stability
+  * Negative keys hash correctly
+    * Validation of IndexFor
+  * PrintTable prints bucket headers
+    * Output test
+  * PrintTable prints collision chain values
+    * Verifies chaining
+
+These tests give broad and deep coverage of the hash table’s intended behavior.
+
+AssociativeHelpersTests (NUnit)
+
+This suite validates console output produced by:
+  * RunDictionary()
+  * RunHashSet()
+  * RunAllAsc()
+
+Assertions verify:
+  * Section headers
+  * ContainsKey results
+  * Lookup results
+  * Add/duplicate behavior for HashSet
+  * Final printed set contents
+
+Because these helpers are console demos rather than production business logic, output-based tests are appropriate and effective.
 
 
 ---

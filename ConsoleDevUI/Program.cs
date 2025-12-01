@@ -309,6 +309,26 @@ namespace ConsoleDevUI
                 ConOutputHelper.Line($"Third Dequeue()  => {pq.Dequeue()}");
 
             ConOutputHelper.Divider();
+
+
+            // Hash Tables & Associative
+            ConOutputHelper.Header("Hash Tables & Associative");
+
+            ConOutputHelper.SubHeader("HashTable Collision (size=5, keys={12, 22, 37})");
+            var table = new SimpleHashTable(5);
+            table.Insert(12);
+            table.Insert(22);
+            table.Insert(37);
+
+            table.PrintTable();
+            ConOutputHelper.Line($"Contains(22): {table.Contains(22)}");
+            ConOutputHelper.Line($"Contains(99): {table.Contains(99)}");
+            ConOutputHelper.Divider();
+
+            ConOutputHelper.SubHeader("Built-in Associative (Dictionary / HashSet)");
+            AssociativeHelpers.RunAllAsc();
+            ConOutputHelper.Divider();
+
         }
 
         static void Fill(int[] a)

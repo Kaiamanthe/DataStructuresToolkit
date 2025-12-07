@@ -126,7 +126,7 @@ namespace DataStructuresToolkit
             return TreeHelper.Inorder(_root);
         }
 
-        // ---------- AVL balancing helpers ----------
+        // AVL balancing helpers
 
         /// <summary>
         /// Rebalances the subtree rooted at <paramref name="node"/> if needed,
@@ -164,7 +164,7 @@ namespace DataStructuresToolkit
             return node;
         }
 
-        // ---------- Debug / visualization helpers ----------
+        // Debug / visualization helpers
 
         /// <summary>
         /// Exposes the root node for visualization and console demos.

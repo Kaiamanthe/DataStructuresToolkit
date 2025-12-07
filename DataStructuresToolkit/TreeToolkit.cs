@@ -97,6 +97,7 @@ namespace DataStructuresToolkit
             return false;
         }
 
+
         /// <summary>
         /// Computes height of the BST using edges convention.
         /// </summary>

@@ -250,7 +250,7 @@ namespace ConsoleDevUI
             int[] sortedSeq = { 10, 20, 30, 40, 50 };
             foreach (var v in sortedSeq) skewed.Insert(v);
 
-            // Balanced insertion order of the same values
+            // Balanced insertion order of the same vals
             var balanced = new DataStructuresToolkit.TreeToolkit();
             int[] balancedOrder = { 30, 20, 40, 10, 50 };
             foreach (var v in balancedOrder) balanced.Insert(v);
@@ -261,7 +261,7 @@ namespace ConsoleDevUI
             ConOutputHelper.Line($"Balanced height (edges) : {balanced.Height()}");
             ConOutputHelper.Divider();
 
-            // AVL Tree Demo
+            // AVL Tree
             ConOutputHelper.Header("AVL Tree Toolkit Tests");
 
             // Demonstrate imbalance with plain BST then deemo AVL rebalancing.
@@ -328,6 +328,67 @@ namespace ConsoleDevUI
             ConOutputHelper.SubHeader("Built-in Associative (Dictionary / HashSet)");
             AssociativeHelpers.RunAllAsc();
             ConOutputHelper.Divider();
+
+            // Linked List
+            ConOutputHelper.Header("Linked List Toolkit Tests");
+
+            // SinglyLinkedList<int>
+            var sList = new SinglyLinkedList<int>();
+            sList.AddFirst(10);
+            sList.AddFirst(20);
+            sList.AddFirst(30); // list should be 30 -> 20 -> 10
+
+            ConOutputHelper.SubHeader("SinglyLinkedList<int> Traversal");
+            ConOutputHelper.Line("Expected order (head to tail): 30, 20, 10");
+            sList.Traverse(v => ConOutputHelper.Line($"Node: {v}"));
+            ConOutputHelper.Divider();
+
+            // DoublyLinkedList<string>
+            var dList = new DoublyLinkedList<string>();
+            dList.AddFirst("world");
+            dList.AddFirst("hello");       // list: hello, world
+            dList.AddLast("again");        // list: hello, world, again
+
+            ConOutputHelper.SubHeader("DoublyLinkedList<string> Forward Traversal");
+            dList.TraverseFor(s => ConOutputHelper.Line($"Node: {s}"));
+
+            ConOutputHelper.SubHeader("DoublyLinkedList<string> Backward Traversal");
+            dList.TraverseBack(s => ConOutputHelper.Line($"Node: {s}"));
+
+            // Remove 
+            ConOutputHelper.SubHeader("DoublyLinkedList<string> Remove Demo");
+            ConOutputHelper.Line("Removing 'world'...");
+            bool removed = dList.Remove("world");
+            ConOutputHelper.Line($"Remove(\"world\") returned: {removed}");
+
+            ConOutputHelper.Line("Forward after remove:");
+            dList.TraverseFor(s => ConOutputHelper.Line($"Node: {s}"));
+
+            ConOutputHelper.Line("Backward after remove:");
+            dList.TraverseBack(s => ConOutputHelper.Line($"Node: {s}"));
+            ConOutputHelper.Divider();
+
+            // Built-in LinkedList<T> comparison
+            ConOutputHelper.SubHeader("Built-in LinkedList<T> Comparison");
+
+            var builtin = new LinkedList<int>();
+            builtin.AddFirst(10);
+            builtin.AddFirst(20);
+            builtin.AddLast(5);  // 20, 10, 5
+
+            ConOutputHelper.Line("Built-in LinkedList<int> forward:");
+            foreach (var v in builtin)
+                ConOutputHelper.Line($"Node: {v}");
+
+            ConOutputHelper.Line("Removing 10 from built-in LinkedList");
+            builtin.Remove(10);
+
+            ConOutputHelper.Line("After removal:");
+            foreach (var v in builtin)
+                ConOutputHelper.Line($"Node: {v}");
+
+            ConOutputHelper.Divider();
+
 
         }
 

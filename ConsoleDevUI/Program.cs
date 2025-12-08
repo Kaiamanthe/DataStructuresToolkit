@@ -209,30 +209,29 @@ namespace ConsoleDevUI
                 }
             );
 
-
             // Trees & BST Toolkit
             ConOutputHelper.Header("Trees & BST Toolkit Tests");
 
             // Teaching tree
             ConOutputHelper.SubHeader("Teaching Tree Traversals + Metrics");
-            var root = DataStructuresToolkit.TreeToolkit.BuildTeachingTree();
+            var root = TreeToolkit.BuildTeachingTree();
 
-            string Join(System.Collections.Generic.IEnumerable<int> xs) => string.Join(", ", xs);
+            string Join(IEnumerable<int> xs) => string.Join(", ", xs);
 
-            ConOutputHelper.Line($"Inorder   : {Join(DataStructuresToolkit.TreeHelper.Inorder(root))}");
-            ConOutputHelper.Line($"Preorder  : {Join(DataStructuresToolkit.TreeHelper.Preorder(root))}");
-            ConOutputHelper.Line($"Postorder : {Join(DataStructuresToolkit.TreeHelper.Postorder(root))}");
+            ConOutputHelper.Line($"Inorder   : {Join(TreeHelper.Inorder(root))}");
+            ConOutputHelper.Line($"Preorder  : {Join(TreeHelper.Preorder(root))}");
+            ConOutputHelper.Line($"Postorder : {Join(TreeHelper.Postorder(root))}");
 
-            int hTeach = DataStructuresToolkit.TreeHelper.Height(root);
+            int hTeach = TreeHelper.Height(root);
             ConOutputHelper.Line($"Height (edges) teaching tree: {hTeach}");
-            ConOutputHelper.Line($"Depth of 38: {DataStructuresToolkit.TreeHelper.Depth(root, 38)}");
-            ConOutputHelper.Line($"Depth of 27: {DataStructuresToolkit.TreeHelper.Depth(root, 27)}");
-            ConOutputHelper.Line($"Depth of 9 : {DataStructuresToolkit.TreeHelper.Depth(root, 9)}");
+            ConOutputHelper.Line($"Depth of 38: {TreeHelper.Depth(root, 38)}");
+            ConOutputHelper.Line($"Depth of 27: {TreeHelper.Depth(root, 27)}");
+            ConOutputHelper.Line($"Depth of 9 : {TreeHelper.Depth(root, 9)}");
             ConOutputHelper.Divider();
 
             // BST insertion & search – classic sequence
             ConOutputHelper.SubHeader("BST Insert + Contains (classic sequence)");
-            var bst = new DataStructuresToolkit.TreeToolkit();
+            var bst = new TreeToolkit();
             int[] seq = { 50, 30, 70, 20, 40, 60, 80 };
             foreach (var v in seq) bst.Insert(v);
 
@@ -245,13 +244,11 @@ namespace ConsoleDevUI
             // Skewed vs. balanced height comparison
             ConOutputHelper.SubHeader("Skewed vs. Balanced-ish Height Comparison");
 
-            // Sorted insert
-            var skewed = new DataStructuresToolkit.TreeToolkit();
+            var skewed = new TreeToolkit();
             int[] sortedSeq = { 10, 20, 30, 40, 50 };
             foreach (var v in sortedSeq) skewed.Insert(v);
 
-            // Balanced insertion order of the same vals
-            var balanced = new DataStructuresToolkit.TreeToolkit();
+            var balanced = new TreeToolkit();
             int[] balancedOrder = { 30, 20, 40, 10, 50 };
             foreach (var v in balancedOrder) balanced.Insert(v);
 
@@ -264,11 +261,9 @@ namespace ConsoleDevUI
             // AVL Tree
             ConOutputHelper.Header("AVL Tree Toolkit Tests");
 
-            // Demonstrate imbalance with plain BST then deemo AVL rebalancing.
             ConOutputHelper.SubHeader("AVL Insert + Rotations with {10, 20, 30}");
 
-            // using TreeToolkit Plain BST (no rotations)
-            var plainBst = new DataStructuresToolkit.TreeToolkit();
+            var plainBst = new TreeToolkit();
             foreach (var v in new[] { 10, 20, 30 })
                 plainBst.Insert(v);
 
@@ -276,8 +271,7 @@ namespace ConsoleDevUI
             ConOutputHelper.Line($"Height (edges): {plainBst.Height()}  (skewed to the right)");
             ConOutputHelper.Divider();
 
-            // AVL tree on same sequence.
-            var avl = new DataStructuresToolkit.AvlTree();
+            var avl = new AvlTree();
             foreach (var v in new[] { 10, 20, 30 })
                 avl.Insert(v);
 
@@ -294,7 +288,7 @@ namespace ConsoleDevUI
 
             ConOutputHelper.SubHeader("Min-Heap Priority Queue with {5, 2, 8}");
 
-            var pq = new DataStructuresToolkit.PriorityQueue();
+            var pq = new PriorityQueue();
             ConOutputHelper.Line("Enqueue 5"); pq.Enqueue(5);
             ConOutputHelper.Line("Enqueue 2"); pq.Enqueue(2);
             ConOutputHelper.Line("Enqueue 8"); pq.Enqueue(8);
@@ -309,7 +303,6 @@ namespace ConsoleDevUI
                 ConOutputHelper.Line($"Third Dequeue()  => {pq.Dequeue()}");
 
             ConOutputHelper.Divider();
-
 
             // Hash Tables & Associative
             ConOutputHelper.Header("Hash Tables & Associative");
@@ -332,7 +325,6 @@ namespace ConsoleDevUI
             // Linked List
             ConOutputHelper.Header("Linked List Toolkit Tests");
 
-            // SinglyLinkedList<int>
             var sList = new SinglyLinkedList<int>();
             sList.AddFirst(10);
             sList.AddFirst(20);
@@ -343,7 +335,6 @@ namespace ConsoleDevUI
             sList.Traverse(v => ConOutputHelper.Line($"Node: {v}"));
             ConOutputHelper.Divider();
 
-            // DoublyLinkedList<string>
             var dList = new DoublyLinkedList<string>();
             dList.AddFirst("world");
             dList.AddFirst("hello");       // list: hello, world
@@ -355,7 +346,6 @@ namespace ConsoleDevUI
             ConOutputHelper.SubHeader("DoublyLinkedList<string> Backward Traversal");
             dList.TraverseBack(s => ConOutputHelper.Line($"Node: {s}"));
 
-            // Remove 
             ConOutputHelper.SubHeader("DoublyLinkedList<string> Remove Demo");
             ConOutputHelper.Line("Removing 'world'...");
             bool removed = dList.Remove("world");
@@ -368,7 +358,6 @@ namespace ConsoleDevUI
             dList.TraverseBack(s => ConOutputHelper.Line($"Node: {s}"));
             ConOutputHelper.Divider();
 
-            // Built-in LinkedList<T> comparison
             ConOutputHelper.SubHeader("Built-in LinkedList<T> Comparison");
 
             var builtin = new LinkedList<int>();
@@ -389,7 +378,24 @@ namespace ConsoleDevUI
 
             ConOutputHelper.Divider();
 
+            // Set & benchmark (HashSet vs List)
 
+            var setResults = SetHelpers.GetSetOpResults();
+            ConOutputHelper.PrintSetOp(
+                setResults.existingItemIds,
+                setResults.newItemIds,
+                setResults.intersection,
+                setResults.union,
+                setResults.difference);
+
+            var benchResults = SetHelpers.BenchListVsHashSetContainsCore();
+            ConOutputHelper.PrintSetBench(
+                benchResults.dataSize,
+                benchResults.lookupCount,
+                benchResults.listMs,
+                benchResults.setMs,
+                benchResults.hitsList,
+                benchResults.hitsSet);
         }
 
         static void Fill(int[] a)

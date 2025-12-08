@@ -266,7 +266,11 @@ namespace ConsoleDevUI
             return -1;
         }
 
-        //Print the crossover size.
+        /// <summary>
+        /// Print the crossover size for timing experiments.
+        /// </summary>
+        /// <param name="what">Label for the experiment.</param>
+        /// <param name="crossover">Crossover n, or -1 if not observed.</param>
         public static void PrintCrossover(string what, int crossover)
         {
             if (crossover < 0)
@@ -319,6 +323,63 @@ namespace ConsoleDevUI
             {
                 PrintTree(node.Right, childIndent, true);
             }
+        }
+
+        // Set Op & Bench formatting
+
+        /// <summary>
+        /// Prints the results of the set operations demo using the shared console helpers.
+        /// </summary>
+        /// <param name="existingItemIds">The original existing-item ID set.</param>
+        /// <param name="newItemIds">The original new-item ID set.</param>
+        /// <param name="intersection">IDs that appear in both sets.</param>
+        /// <param name="union">All IDs that appear in either set.</param>
+        /// <param name="difference">IDs that are in existing but not in new.</param>
+        public static void PrintSetOp(
+            HashSet<int> existingItemIds,
+            HashSet<int> newItemIds,
+            HashSet<int> intersection,
+            HashSet<int> union,
+            HashSet<int> difference)
+        {
+            SubHeader("Set Operations (HashSet)");
+            Line("Existing IDs: " + string.Join(", ", existingItemIds));
+            Line("New IDs:      " + string.Join(", ", newItemIds));
+            Line("Intersection: " + string.Join(", ", intersection));
+            Line("Union:        " + string.Join(", ", union));
+            Line("Difference:   " + string.Join(", ", difference));
+            Divider();
+        }
+
+        /// <summary>
+        /// Prints timing and hit-count results for the List vs HashSet benchmark.
+        /// </summary>
+        /// <param name="dataSize">Number of elements in the data set.</param>
+        /// <param name="lookupCount">Number of membership checks performed.</param>
+        /// <param name="listMs">Elapsed milliseconds for List&lt;int&gt;.Contains.</param>
+        /// <param name="setMs">Elapsed milliseconds for HashSet&lt;int&gt;.Contains.</param>
+        /// <param name="hitsList">Number of lookup hits in the list.</param>
+        /// <param name="hitsSet">Number of lookup hits in the hash set.</param>
+        public static void PrintSetBench(
+            int dataSize,
+            int lookupCount,
+            long listMs,
+            long setMs,
+            int hitsList,
+            int hitsSet)
+        {
+            SubHeader("List<int>.Contains vs HashSet<int>.Contains");
+            Line($"Data size: {dataSize}, Lookups per structure: {lookupCount}");
+            Line($"List<int>.Contains     - hits: {hitsList}, time: {listMs} ms");
+            Line($"HashSet<int>.Contains  - hits: {hitsSet}, time: {setMs} ms");
+
+            if (setMs > 0)
+            {
+                double speedup = (double)listMs / setMs;
+                Line($"Speedup (List / HashSet): {speedup:F2}x");
+            }
+
+            Divider();
         }
     }
 }

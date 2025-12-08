@@ -36,6 +36,7 @@ DataStructuresToolkit/
     - SimpleHashTable.cs
     - AssociativeHelpers.cs
     - LinkedListHelpers.cs
+    - SetHelpers.cs
 
 - Tests/
     - TreeToolkitTests.cs
@@ -49,6 +50,8 @@ DataStructuresToolkit/
     - SimpleHashTableTests.cs
     - AssociativeHelpersTests.cs
     - LinkedListHelpersTests.cs
+    - SetHelpersTests.cs
+
 
 
 ---
@@ -367,6 +370,17 @@ Console output includes:
 
 ---
 
+### Set Operations & Benchmark
+- Prints:
+  - Existing IDs
+  - New IDs  
+  - Intersection  
+  - Union  
+  - Difference  
+- Then prints the benchmark results comparing List vs HashSet contains performance.
+
+---
+
 ### Unit Testing (NUnit)
 
 All tests follow the Arrange → Act → Assert (AAA) pattern.
@@ -518,4 +532,30 @@ These tests ensure:
 - Edge cases (empty, head, tail, single node) behave as expected  
 - Internal list structure remains consistent after modifications  
 
+SetHelpersTests (NUnit)
+
+The SetHelpersTests class focuses on the new set extension and follows the Arrange → Act → Assert pattern on each test.
+
+Covered behaviors:
+
+- BuildUniqueIdSet
+   - Removes duplicate IDs and keeps all unique values.
+   - Returns an empty set for empty input.
+   - Throws ArgumentNullException when given a null sequence.
+
+- GetSetOpResults
+  - Verifies that:
+   - existingItemIds and newItemIds match the expected example sets.
+   - intersetion contains only IDs present in both sets.
+   - union contains all IDs exactly once.
+   - difference contains IDs only in the original existing set.
+
+- BenchListVsHashSetContainsCore
+   - Uses a smaller data size and lookup count for tests (e.g., 50,000 / 5,000).
+   - Asserts that:
+     - hitsList == hitsSet, since both structures contain the same data.
+     - listMs and setMs are non-negative.
+     - In most runs, listMs >= setMs, reflecting HashSet’s O(1) average lookup vs List’s O(n).
+
+These tests validate both correctness of set operations and sanity of the performance benchmark, ensuring the capstone extension behaves as intended.
 ---
